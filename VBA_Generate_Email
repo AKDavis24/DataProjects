@@ -70,3 +70,27 @@ Application.CutCopyMode = True
 On Error Resume Next
 .DrawingObjects.Visible = True
 .DraingObjects.Delete
+On Error GoTo 0
+End With
+
+With wb.PublishObjects.Add( _
+SourceType:=xlSourceRange, _
+Filename:=File, _
+Sheet:=wb.Sheets(1).Name, _
+Source:=wb.Sheets(1).UsedRange.Address, _
+HtmlType:-xlHtmlStatic)
+.Publish (True)
+End With
+
+Set obj = CreateObject("Scripting.FileSystemObject")
+Set txtstr = obj.GetFile(File).OpenAsTrxtStream(1, -2)
+RangeHTML = txtstr.readall
+txtstr.Close
+RangetoHTML = Replace(RangetoHTML, "aligne=center x:publishsource=", _
+"align=left x:publishsource")
+wb.Close savechanges:=False
+Kill File
+Set txtstr = Nothing
+Set obj = Nothing
+Set wb = Nothing
+End Function
