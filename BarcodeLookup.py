@@ -5,6 +5,10 @@ import os
 import pandas as pd
 from tkinter import *
 
+# The reason for this code:
+# Products were checked in and were never physically given the unique Product ID.
+# This file reads an exported inventory file and will return the unique Product ID based on the unique criteria that product was given.
+
 username = os.path.join(os.path.expandvars('%userprofile%')) # Return Userprofile
 File = 'example.xlsx' # Read this file in directory
 columns = ['PrintValue', 'BarcodeScanned'] # Setting variable of columns we want to read
