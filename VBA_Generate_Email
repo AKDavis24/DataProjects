@@ -1,0 +1,72 @@
+Sub Paste_Range_Outlook()
+Dim wb As Workbook
+Dim ws As Worksheet
+Dim rng As Range
+Dim Outlook As Object
+Dim OutlookMail As Object
+
+Set wb = ThisWorkbook
+Set ws = wb.Worksheets("Email")
+Set rng = Nothing
+Set rng = Range("A1:A5").SpecialCells(xlCellsTypeVisible)
+
+With Application
+.EnableEvents = False
+.Screen Updating = False
+End With
+
+Set Outlook = CreateObject("Outlook.Application")
+Set OutlookMail = Outlook.CreateItem(0)
+
+On Error Resume Next
+
+With OutlookMail
+.To = ws.Cells(24, 3)
+.CC = ws.Cells(25, 3)
+
+.Subject = "This is a generated email"
+
+.HTMLBody = "Hello, " & _
+"<br>" & _ 
+"<br>" & "This is a generated email using VBA"
+"<br>" & "Each HTML break is a new line within the email body"
+"<br>" & "Pasting the excel range below: "
+"<br>" & RangetoHTML(rng)
+
+.Display
+End With
+
+On Error GoTo 0
+
+With Application
+.EnableEvents = True
+.ScreenUpdating = True
+End With
+
+Set OutlookMail = Nothing
+Set Outlook  = Nothing
+
+End Sub
+
+_____________________________________________________________________________________________________________
+# Below we will make the RangetoHTML Function
+Function RangetoHTML(rng As Range)
+Dim obj As Object
+Dim txtstr As Object
+Dim File As String
+Dim wb As String
+Dim wb As Workbook
+
+File = Environ$("temp") & "\" & Format(Now, "dd-mm-yy h -mm-ss") & ".htm"
+rng.Copy
+Set wb = Workbooks.Add(1)
+
+With wb.Sheets(1)
+.Cells(1).PasteSpecial Paste:=8
+.Cells(1).PasteSpecial xlPasteValues, , False, False
+.Cells(1).PasteSpecial xlPasteFormats, , False, False
+.Cells(1).Select
+Application.CutCopyMode = True
+On Error Resume Next
+.DrawingObjects.Visible = True
+.DraingObjects.Delete
