@@ -35,13 +35,10 @@ lrslt_tech = lrslt_tech.rename(columns={'FUNCTIONALITY': 'Condition Pull'})
 drslt_tech = df5.loc[(df5['CategoryName'] == 'Category -> Subcategory -> Product2') &
                   (df5['FUNCTIONALITY'] != 'FULLY FUNCTIONAL')]
 drslt_tech = drslt_tech.rename(columns={'FUNCTIONALITY': 'Condition Pull'})
-rslt_cto = df7.loc[df7['ProductDescription'].str.contains('CTO', case=False)]
-rslt_cto = rslt_cto.rename(columns={'ProductDescription': 'Condition Pull'})
 
 # Now we are compiling the frames to create an excel export of all the errors within inventory.
-pdList = [lrslt_tech, drslt_tech, rslt_cto]  # List of your dataframes
+pdList = [lrslt_tech, drslt_tech]  # List of your dataframes
 new_df = pd.concat(pdList)
-new_df.loc[new_df['Condition Pull'].str.contains('CTO'), 'Condition Pull'] = 'CTO'
 new_df = new_df.dropna()
 new_df = new_df.rename(columns={'CategoryName': 'ProgramName'})
 
